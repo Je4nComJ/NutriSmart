@@ -1,15 +1,16 @@
 package com.gomesdevelopers.NutriSmart.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.gomesdevelopers.NutriSmart.dto.ClienteDTO;
 import com.gomesdevelopers.NutriSmart.entities.Cliente;
 import com.gomesdevelopers.NutriSmart.entities.Nutricionista;
 import com.gomesdevelopers.NutriSmart.repositories.ClienteRepository;
 import com.gomesdevelopers.NutriSmart.repositories.NutricionistaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
