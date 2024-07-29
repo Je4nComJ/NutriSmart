@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gomesdevelopers.NutriSmart.dto.ClienteDTO;
 import com.gomesdevelopers.NutriSmart.dto.NutricionistaDTO;
+import com.gomesdevelopers.NutriSmart.entities.Cliente;
 import com.gomesdevelopers.NutriSmart.entities.Nutricionista;
 import com.gomesdevelopers.NutriSmart.repositories.NutricionistaRepository;
 
@@ -49,11 +51,34 @@ public class NutricionistaService {
 
     }
     
+
+    public NutricionistaDTO buscarNutricionistaPorId(Long id){
+        Nutricionista nutricionista = repository.findById(id).orElseThrow(() -> new RuntimeException("Nutricionista não encontrado!"));
+        return convertToDTO(nutricionista);
+    }
+    
     public List<NutricionistaDTO> listarNutricionista(){
     	return repository.findAll().stream().map(this:: convertToDTO).collect(Collectors.toList());
     }
     
     public void deletarNutricionista(Long id) {
     	repository.deleteById(id);
+    }
+    
+    public NutricionistaDTO atualizarNutricionista (Long id, NutricionistaDTO nutricionistaDTO) {
+    	Nutricionista nutricionistaExistente = repository.findById(id)
+    			.orElseThrow( () -> new RuntimeException("Nutricionista não encontrado"));
+    	
+    	nutricionistaExistente.setCrn(nutricionistaDTO.getCrn());
+    	nutricionistaExistente.setDataContratacao(nutricionistaDTO.getDataContratacao());
+    	nutricionistaExistente.setEmail(nutricionistaDTO.getEmail());
+    	nutricionistaExistente.setEspecialidade(nutricionistaDTO.getEspecialidade());
+    	nutricionistaExistente.setNome(nutricionistaDTO.getNome());
+    	nutricionistaExistente.setTelefone(nutricionistaDTO.getTelefone());
+    	
+    	Nutricionista nutricionistaAtualizado = repository.save(nutricionistaExistente);
+    	
+    	return  new NutricionistaDTO(nutricionistaAtualizado);
+
     }
 }
