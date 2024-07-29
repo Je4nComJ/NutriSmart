@@ -52,4 +52,8 @@ public class NutricionistaService {
     public List<NutricionistaDTO> listarNutricionista(){
     	return repository.findAll().stream().map(this:: convertToDTO).collect(Collectors.toList());
     }
+    
+    public void deletarNutricionista(Long id) {
+    	repository.deleteById(id);
+    }
 }
