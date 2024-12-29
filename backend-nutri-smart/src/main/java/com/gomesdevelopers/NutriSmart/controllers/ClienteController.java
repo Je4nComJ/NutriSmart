@@ -1,49 +1,35 @@
 package com.gomesdevelopers.NutriSmart.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.gomesdevelopers.NutriSmart.dto.ClienteDTO;
 import com.gomesdevelopers.NutriSmart.services.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping(value = "/clientes")
 public class ClienteController {
-
-    @Autowired
-    private ClienteService service;
-
-    @PostMapping
-    public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO){
-        ClienteDTO novoCliente = service.salvarCliente(clienteDTO);
-        return ResponseEntity.ok(novoCliente);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> buscarClientePorID(@PathVariable Long id){
-        ClienteDTO cliente = service.buscarClientePorId(id);
-        return ResponseEntity.ok(cliente);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ClienteDTO>> listarClientes(){
-        List<ClienteDTO> clientes = service.listarClientes();
-        return ResponseEntity.ok(clientes);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO){
-        ClienteDTO clienteAtualizado = service.atualizarCliente(id, clienteDTO);
-        return ResponseEntity.ok(clienteAtualizado);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id){
-        service.deletarCliente(id);
-        return ResponseEntity.noContent().build();
-
-    }
-
+	
+	@Autowired
+	private ClienteService service;
+	
+	@GetMapping
+	public ResponseEntity<Page<ClienteDTO>> findAllPaged(Pageable pageable){
+		Page<ClienteDTO> dto = service.findAllPaged(pageable);
+		return ResponseEntity.ok(dto);
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<ClienteDTO> findById(@PathVariable Long id){
+		ClienteDTO dto = service.findById(id);
+		return ResponseEntity.ok(dto);
+	}
+	
 }
+
