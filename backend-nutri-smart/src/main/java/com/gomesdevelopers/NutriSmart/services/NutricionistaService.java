@@ -19,54 +19,54 @@ import com.gomesdevelopers.NutriSmart.repositories.ConsultaRepository;
 import com.gomesdevelopers.NutriSmart.repositories.NutricionistaRepository;
 
 @Service
-public class ClienteService {
+public class NutricionistaService {
 	
 	@Autowired
-	private ClienteRepository repository;
-	
-	@Autowired
-	private NutricionistaRepository nutricionistaRepository;
+	private NutricionistaRepository repository;
 	
 	@Autowired
 	private ConsultaRepository consultaRepository;
 	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
 	@Transactional(readOnly = true)
-	public Page<ClienteDTO> findAllPaged(Pageable pageable){
-		Page<Cliente> list = repository.findAll(pageable);
-		return list.map(x -> new ClienteDTO(x));
+	public Page<NutricionistaDTO> findAllPaged(Pageable pageable){
+		Page<Nutricionista> list = repository.findAll(pageable);
+		return list.map(x -> new NutricionistaDTO(x));
 	}
 	
 	@Transactional(readOnly = true)
-	public ClienteDTO findById(Long id) {
-		Cliente entity = repository.findById(id).orElseThrow(
-				() ->new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));
-		
-		return new ClienteDTO(entity);	
+	public NutricionistaDTO findById (Long id) {
+		Nutricionista entity = repository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Nutricionista com o ID: " + id + " não encontrado!"));
+		return new NutricionistaDTO(entity);
 	}
 	
 	@Transactional
-	public ClienteDTO insert(ClienteDTO dto) {
-		Cliente entity = new Cliente();
+	public NutricionistaDTO insert(NutricionistaDTO dto) {
+		Nutricionista entity = new Nutricionista();
 		dtoToEntity(dto, entity);
 		entity = repository.save(entity);
-		return new ClienteDTO(entity);
+		return new NutricionistaDTO(entity);
 	}
 	
 	@Transactional
-	public ClienteDTO update(Long id, ClienteDTO dto) {
-		Cliente entity = repository.findById(id).orElseThrow(
-				() ->new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));
+	public NutricionistaDTO update(Long id, NutricionistaDTO dto) {
+		Nutricionista entity = repository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Nutricionista com o ID: " + id + " não encontrado!"));
 		
 		dtoToEntity(dto, entity);
-		Cliente savedCliente = repository.save(entity);
-		return new ClienteDTO(savedCliente);
+		Nutricionista savedNutri = repository.save(entity);
+		
+		return new NutricionistaDTO(savedNutri);
 	}
 	
 	@Transactional
 	public void delete(Long id) {
 		try {
 		repository.findById(id).orElseThrow(
-				() -> new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));	
+				() -> new EntityNotFoundException("Nutricionista com id: " + id + " não encontrado em nossa base de dados"));	
 		repository.deleteById(id);
 		}
 		catch(DataIntegrityViolationException e) {
@@ -74,20 +74,19 @@ public class ClienteService {
 		}
 	}
 	
-	private void dtoToEntity(ClienteDTO dto, Cliente entity) {
-		entity.setCpf(dto.getCpf());
-		entity.setDataNascimento(dto.getDataNascimento());
-		entity.setDataRegistro(dto.getDataRegistro());
+	
+	private void dtoToEntity(NutricionistaDTO dto, Nutricionista entity) {
+		entity.setCrn(dto.getCrn());
+		entity.setDataContratacao(dto.getDataContratacao());
 		entity.setEmail(dto.getEmail());
-		entity.setEndereco(dto.getEndereco());
+		entity.setEspecialidade(dto.getEspecialidade());
 		entity.setNome(dto.getNome());
-		entity.setSexo(dto.getSexo());
 		entity.setTelefone(dto.getTelefone());
 		
-		entity.getNutricionistas().clear();
-		for(NutricionistaDTO nutDTO : dto.getNutricionistas()) {
-			Nutricionista nutricionista = nutricionistaRepository.getReferenceById(nutDTO.getId());
-			entity.getNutricionistas().add(nutricionista);
+		entity.getClientes().clear();
+		for(ClienteDTO cliDTO : dto.getClientes()) {
+			Cliente cliente = clienteRepository.getReferenceById(cliDTO.getId());
+			entity.getClientes().add(cliente);
 		}
 		
 		entity.getConsultas().clear();
