@@ -24,7 +24,7 @@ public class SecurityConfig {
     private Environment env;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
             http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         }
