@@ -1,6 +1,7 @@
 package com.gomesdevelopers.NutriSmart.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,18 @@ public class ClienteService {
 		dtoToEntity(dto, entity);
 		Cliente savedCliente = repository.save(entity);
 		return new ClienteDTO(savedCliente);
+	}
+	
+	@Transactional
+	public void delete(Long id) {
+		try {
+		repository.findById(id).orElseThrow(
+				() -> new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));	
+		repository.deleteById(id);
+		}
+		catch(DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Não foi possível deletar, entidade em conflito!");
+		}
 	}
 	
 	private void dtoToEntity(ClienteDTO dto, Cliente entity) {
