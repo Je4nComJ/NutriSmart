@@ -1,9 +1,9 @@
 package com.gomesdevelopers.NutriSmart.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.gomesdevelopers.NutriSmart.entities.Cliente;
 import com.gomesdevelopers.NutriSmart.entities.Consulta;
@@ -28,9 +28,11 @@ public class NutricionistaDTO {
  
     private LocalDate dataContratacao;
 
-    private Set<Cliente> clientes = new HashSet<>();
+    private List<ClienteDTO> clientes = new ArrayList<>();
 
-    private Set<Consulta> consultas = new HashSet<>();
+    private List<ConsultaDTO> consultas = new ArrayList<>();
+   
+    public NutricionistaDTO() {}
     
     public NutricionistaDTO(Nutricionista entity) {
     	id = entity.getId();
@@ -44,8 +46,10 @@ public class NutricionistaDTO {
     
     public NutricionistaDTO(Nutricionista entity, Set<Cliente> clientes, Set<Consulta> consultas) {
     	this(entity);
-    	clientes.stream().map(cli -> new ClienteDTO(cli)).collect(Collectors.toSet());
-    	consultas.stream().map(cons -> new ConsultaDTO(cons)).collect(Collectors.toSet());
+    	
+    	clientes.forEach(cli -> this.clientes.add(new ClienteDTO(cli)));
+    	
+    	consultas.forEach(cons -> this.consultas.add(new ConsultaDTO(cons)));
     	
     }
 }

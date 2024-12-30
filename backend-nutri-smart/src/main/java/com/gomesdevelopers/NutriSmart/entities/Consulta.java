@@ -35,7 +35,7 @@ public class Consulta {
     @Column(name = "data_consulta", nullable = false)
     private LocalDate dataConsulta;
 
-    @Column(name = "observações")
+    @Column(name = "observações", columnDefinition = "TEXT")
     private String observacoes; 
 
 }

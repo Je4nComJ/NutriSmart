@@ -62,5 +62,4 @@ public class Cliente {
 
     @OneToMany(mappedBy = "cliente")
     private Set<Consulta> consultas = new HashSet<>();
-
 }

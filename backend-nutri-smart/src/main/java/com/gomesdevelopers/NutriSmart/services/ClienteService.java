@@ -7,15 +7,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gomesdevelopers.NutriSmart.dto.ClienteDTO;
+import com.gomesdevelopers.NutriSmart.dto.ConsultaDTO;
+import com.gomesdevelopers.NutriSmart.dto.NutricionistaDTO;
 import com.gomesdevelopers.NutriSmart.entities.Cliente;
+import com.gomesdevelopers.NutriSmart.entities.Consulta;
+import com.gomesdevelopers.NutriSmart.entities.Nutricionista;
 import com.gomesdevelopers.NutriSmart.exceptions.EntityNotFoundException;
 import com.gomesdevelopers.NutriSmart.repositories.ClienteRepository;
+import com.gomesdevelopers.NutriSmart.repositories.ConsultaRepository;
+import com.gomesdevelopers.NutriSmart.repositories.NutricionistaRepository;
 
 @Service
 public class ClienteService {
 	
 	@Autowired
 	private ClienteRepository repository;
+	
+	@Autowired
+	private NutricionistaRepository nutricionistaRepository;
+	
+	@Autowired
+	private ConsultaRepository consultaRepository;
 	
 	@Transactional(readOnly = true)
 	public Page<ClienteDTO> findAllPaged(Pageable pageable){
@@ -29,5 +41,37 @@ public class ClienteService {
 		
 		return new ClienteDTO(entity);
 		
+	}
+	
+	@Transactional
+	public ClienteDTO insert(ClienteDTO dto) {
+		Cliente entity = new Cliente();
+		dtoToEntity(dto, entity);
+		entity = repository.save(entity);
+		return new ClienteDTO(entity);
+	}
+	
+	
+	private void dtoToEntity(ClienteDTO dto, Cliente entity) {
+		entity.setCpf(dto.getCpf());
+		entity.setDataNascimento(dto.getDataNascimento());
+		entity.setDataRegistro(dto.getDataRegistro());
+		entity.setEmail(dto.getEmail());
+		entity.setEndereco(dto.getEndereco());
+		entity.setNome(dto.getNome());
+		entity.setSexo(dto.getSexo());
+		entity.setTelefone(dto.getTelefone());
+		
+		entity.getNutricionistas().clear();
+		for(NutricionistaDTO nutDTO : dto.getNutricionistas()) {
+			Nutricionista nutricionista = nutricionistaRepository.getReferenceById(nutDTO.getId());
+			entity.getNutricionistas().add(nutricionista);
+		}
+		
+		entity.getConsultas().clear();
+		for(ConsultaDTO consDTO : dto.getConsultas()) {
+			Consulta consulta = consultaRepository.getReferenceById(consDTO.getId());
+			entity.getConsultas().add(consulta);
+		}
 	}
 }
