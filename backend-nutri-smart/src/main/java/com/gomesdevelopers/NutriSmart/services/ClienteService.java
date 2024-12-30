@@ -37,7 +37,8 @@ public class ClienteService {
 	
 	@Transactional(readOnly = true)
 	public ClienteDTO findById(Long id) {
-		Cliente entity = repository.findById(id).orElseThrow(() ->new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));
+		Cliente entity = repository.findById(id).orElseThrow(
+				() ->new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));
 		
 		return new ClienteDTO(entity);
 		
@@ -51,6 +52,15 @@ public class ClienteService {
 		return new ClienteDTO(entity);
 	}
 	
+	@Transactional
+	public ClienteDTO update(Long id, ClienteDTO dto) {
+		Cliente entity = repository.findById(id).orElseThrow(
+				() ->new EntityNotFoundException("Cliente com id: " + id + " não encontrado em nossa base de dados"));
+		
+		dtoToEntity(dto, entity);
+		Cliente savedCliente = repository.save(entity);
+		return new ClienteDTO(savedCliente);
+	}
 	
 	private void dtoToEntity(ClienteDTO dto, Cliente entity) {
 		entity.setCpf(dto.getCpf());
