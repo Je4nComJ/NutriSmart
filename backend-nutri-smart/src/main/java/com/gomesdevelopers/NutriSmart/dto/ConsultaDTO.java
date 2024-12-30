@@ -10,8 +10,8 @@ import lombok.Data;
 public class ConsultaDTO {
 	
     private Long id;
-    private ClienteDTO clienteDTO;
-    private NutricionistaDTO nutricionistaDTO;
+    private ClienteDTO cliente;
+    private NutricionistaDTO nutricionista;
     private LocalDate dataConsulta;
     private String observacoes;
     
@@ -19,8 +19,8 @@ public class ConsultaDTO {
     
     public ConsultaDTO(Consulta entity) {
     	id = entity.getId();
-    	clienteDTO =  new ClienteDTO(entity.getCliente());
-    	nutricionistaDTO = new NutricionistaDTO(entity.getNutricionista());
+    	cliente =  new ClienteDTO(entity.getCliente());
+    	nutricionista = new NutricionistaDTO(entity.getNutricionista());
     	dataConsulta = entity.getDataConsulta();
     	observacoes = entity.getObservacoes();
     }
