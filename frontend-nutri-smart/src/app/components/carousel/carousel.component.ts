@@ -26,6 +26,7 @@ export class CarouselComponent {
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       this.showCarousel = event.url === '/';
+      this.showCarousel = event.url === '/home';
     });
   }
 
